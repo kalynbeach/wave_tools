@@ -27,5 +27,5 @@ fn main() {
     buffer_source.start();
 
     // Listen
-    std::thread::sleep(std::time::Duration::from_secs(4));
+    std::thread::sleep(std::time::Duration::from_secs(10));
 }
