@@ -1,5 +1,9 @@
 // use chrono::prelude::*;
 
+// pub struct Template {
+//     name: String,
+// }
+
 // pub struct Project {
 //     title: String,
 //     artist: String,
