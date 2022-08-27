@@ -1,6 +1,7 @@
 pub mod audio;
 pub mod ableton;
 pub mod elektron;
+pub mod music;
 
 fn main() {
     println!("\n w a v e _ t o o l s \n");

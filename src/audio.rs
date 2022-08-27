@@ -3,8 +3,6 @@ use web_audio_api::AudioBuffer;
 use web_audio_api::context::{AudioContext, BaseAudioContext};
 use web_audio_api::node::{AudioNode, AudioScheduledSourceNode};
 
-pub mod music;
-
 pub fn create_audio_context() -> AudioContext {
     println!("Creating audio context...");
     let context = AudioContext::default();
@@ -17,10 +15,6 @@ pub fn create_audio_buffer(context: &AudioContext, file_path: String) -> AudioBu
     let buffer = context.decode_audio_data_sync(file).unwrap();
     buffer
 }
-
-// pub fn get_bpm(buffer: AudioBuffer) -> i32 {}
-
-// pub fn get_key(buffer: AudioBuffer) -> String {}
 
 pub fn test_audio(context: &AudioContext, file_path: String) {
     let buffer = create_audio_buffer(&context, file_path);
