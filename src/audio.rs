@@ -17,6 +17,7 @@ pub fn create_audio_buffer(context: &AudioContext, file_path: String) -> AudioBu
 }
 
 pub fn test_audio(context: &AudioContext, file_path: String) {
+    println!("\n[test_audio]");
     let buffer = create_audio_buffer(&context, file_path);
 
     println!("Setting gain level...");
