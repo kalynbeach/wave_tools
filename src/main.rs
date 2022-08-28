@@ -1,4 +1,4 @@
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use clap::{Parser, Subcommand};
 
 pub mod audio;
@@ -7,7 +7,6 @@ pub mod elektron;
 pub mod music;
 
 // See: https://docs.rs/clap/latest/clap/_derive/_tutorial/index.html
-
 #[derive(Parser)]
 #[clap(name = "wave_tools")]
 #[clap(author = "Kalyn Beach")]
@@ -34,9 +33,8 @@ enum Commands {
 }
 
 #[allow(dead_code)]
-fn test() {
+fn test(file_path: &Path) {
     let context = audio::create_audio_context();
-    let file_path = String::from("samples/test_beat.wav");
     audio::test_audio(&context, file_path);
 }
 
@@ -58,9 +56,10 @@ fn main() {
 
     match &cli.command {
         Some(Commands::Test { file_path }) => {
+            println!("\n[* Test *]");
             if let Some(path) = file_path.as_deref() {
                 println!("Test file file_path is: {}", path.display());
-                test();
+                test(path);
             }
         }
         None => {}
