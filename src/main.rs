@@ -29,7 +29,7 @@ struct Cli {
 enum Commands {
     /// Calls test_audio
     Test { file_path: Option<PathBuf> },
-    // Music {}
+    Templates
 }
 
 #[allow(dead_code)]
@@ -61,6 +61,10 @@ fn main() {
                 println!("Test file file_path is: {}", path.display());
                 test(path);
             }
+        }
+        Some(Commands::Templates) => {
+            println!("\n[* Templates *]");
+            ableton::list_templates().unwrap();
         }
         None => {}
     }
