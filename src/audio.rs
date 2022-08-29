@@ -20,6 +20,7 @@ pub fn create_audio_buffer(context: &AudioContext, file_path: &Path) -> AudioBuf
 pub fn test_audio(context: &AudioContext, file_path: &Path) {
     println!("\n[test_audio]");
     let buffer = create_audio_buffer(&context, file_path);
+    let buffer_duration = buffer.duration() as u64;
 
     println!("Setting gain level...");
     let volume = context.create_gain();
@@ -33,7 +34,7 @@ pub fn test_audio(context: &AudioContext, file_path: &Path) {
     buffer_source.start();
 
     println!("Listening...");
-    std::thread::sleep(std::time::Duration::from_secs(10));
+    std::thread::sleep(std::time::Duration::from_secs(buffer_duration));
 
     println!("Done. \n");
 }
