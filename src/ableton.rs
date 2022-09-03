@@ -1,7 +1,7 @@
-use std::io;
+#![allow(dead_code)]
+use std::{fs, io};
 use std::path::{Path, PathBuf};
-use std::fs;
-// use chrono::prelude::*;
+use chrono::prelude::*;
 
 // See: https://help.ableton.com/hc/en-us/articles/209769625-Live-specific-file-types
 // TODO: Add more as needed
@@ -13,7 +13,24 @@ use std::fs;
 //     Clip
 // }
 
-#[allow(dead_code)]
+#[derive(Debug)]
+pub struct Project {
+    title: String,
+    artist: String,
+}
+
+#[derive(Debug)]
+pub struct Set {
+    title: String,
+    created: DateTime<Local>,
+    modified: DateTime<Local>,
+}
+
+#[derive(Debug)]
+pub struct Clip {
+    name: String,
+}
+
 #[derive(Debug)]
 pub struct Template {
     name: String,
@@ -54,19 +71,4 @@ pub fn list_templates() -> io::Result<()> {
 //     // For each .als file in templates_dir:
 //     // - Create a new Template
 //     // - Add new Template to Templates Vector
-// }
-
-// pub struct Project {
-//     title: String,
-//     artist: String,
-// }
-
-// pub struct Set {
-//     title: String,
-//     created: DateTime<Local>,
-//     modified: DateTime<Local>,
-// }
-
-// pub struct Clip {
-//     name: String,
 // }

@@ -1,11 +1,17 @@
-// pub enum Key {}
+#![allow(dead_code)]
+use std::path::PathBuf;
 
-// pub struct Record {
-//     title: String,
-//     artist: String,
-// }
+#[derive(Debug)]
+pub struct Record {
+    title: String,
+    artist: String,
+}
 
-// pub struct Sample {}
+#[derive(Debug)]
+pub struct Sample {
+    name: String,
+    path: PathBuf
+}
 
 // pub fn get_bpm(buffer: AudioBuffer) -> i32 {}
 
