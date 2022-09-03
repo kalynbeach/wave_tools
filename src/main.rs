@@ -1,4 +1,4 @@
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use clap::{Parser, Subcommand};
 
 pub mod audio;
@@ -32,12 +32,6 @@ enum Commands {
     Templates
 }
 
-#[allow(dead_code)]
-fn test(file_path: &Path) {
-    let context = audio::create_audio_context();
-    audio::test_audio(&context, file_path);
-}
-
 fn main() {
     println!("\n w a v e _ t o o l s \n");
 
@@ -59,7 +53,10 @@ fn main() {
             println!("\n[* Test *]");
             if let Some(path) = file_path.as_deref() {
                 println!("Test file file_path is: {}", path.display());
-                test(path);
+                let context = audio::create_audio_context();
+                audio::test_web_audio(&context, path);
+            } else {
+                audio::test_rodio();
             }
         }
         Some(Commands::Templates) => {
