@@ -1,3 +1,4 @@
+use std::path::{Path};
 use clap::Parser;
 use wave_tools::{audio, ableton, Cli, Commands};
 
@@ -19,7 +20,7 @@ fn main() {
 
     match &cli.command {
         Some(Commands::Test { file_path }) => {
-            println!("\n[* Test *]");
+            println!("\n[* Test *]\n");
             if let Some(path) = file_path.as_deref() {
                 println!("Test file file_path is: {}", path.display());
                 let context = audio::create_audio_context();
@@ -29,8 +30,10 @@ fn main() {
             }
         }
         Some(Commands::Templates) => {
-            println!("\n[* Templates *]");
-            ableton::list_templates().unwrap();
+            println!("\n[* Templates *]\n");
+            // TODO: Create Path using &str from config
+            let templates_dir_path = Path::new("/Users/kalynbeach/Music/Ableton/User Library/Templates");
+            ableton::index_templates(templates_dir_path).unwrap();
         }
         None => {}
     }

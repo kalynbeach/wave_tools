@@ -34,27 +34,44 @@ pub struct Clip {
 #[derive(Debug)]
 pub struct Template {
     name: String,
-    version: u8,
     path: PathBuf,
+    version: f32,
 }
 
 impl Template {
     #[allow(dead_code)]
-    fn new(name: String, version: u8, path: PathBuf) -> Self {
+    fn new(name: String, path: PathBuf, version: f32) -> Self {
         Template {
             name,
-            version,
-            path
+            path,
+            version
         }
     }
 }
 
-pub fn list_templates() -> io::Result<()> {
-    // TODO: Create Path using &str from config
-    let templates_dir = Path::new("/Users/kalynbeach/Music/Ableton/User Library/Templates");
-    println!("* Templates dir: {:?}", templates_dir);
+pub fn index_templates(path: &Path) -> io::Result<Vec<Template>> {
+    let mut templates: Vec<Template> = Vec::new();
 
-    for entry in fs::read_dir(templates_dir)? {
+    for entry in fs::read_dir(path)? {
+        let entry = entry?;
+        let path = entry.path();
+        if path.is_file() {
+            let template_name = entry.file_name().into_string().unwrap();
+            let template_path = PathBuf::from(entry.path());
+            let template_version = 0.1;
+            let template = Template::new(template_name, template_path, template_version);
+            println!("{:?}", template);
+            templates.push(template)
+        }
+    }
+
+    Ok(templates)
+}
+
+pub fn list_templates(path: &Path) -> io::Result<()> {
+    println!("* Templates dir: {:?}", path);
+
+    for entry in fs::read_dir(path)? {
         let entry = entry?;
         let path = entry.path();
         if path.is_file() {
