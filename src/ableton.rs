@@ -1,12 +1,13 @@
 #![allow(dead_code)]
 use std::{fs, io};
 use std::path::{Path, PathBuf};
+use walkdir::{DirEntry, WalkDir};
 use chrono::prelude::*;
 
 // See: https://help.ableton.com/hc/en-us/articles/209769625-Live-specific-file-types
 // TODO: Add more as needed
-// const LIVE_SET_FILE_EXTENSION: &str = ".als";
-// const LIVE_CLIP_FILE_EXTENSION: &str = ".alc";
+const LIVE_SET_FILE_EXTENSION: &str = ".als";
+const LIVE_CLIP_FILE_EXTENSION: &str = ".alc";
 
 // enum LiveFileType {
 //     Set,
@@ -49,6 +50,26 @@ impl Template {
     }
 }
 
+fn is_hidden(entry: &DirEntry) -> bool {
+    entry.file_name()
+        .to_str()
+        .map(|s| s.starts_with("."))
+        .unwrap_or(false)
+}
+
+pub fn index_projects(projects_root_path: &Path) -> io::Result<Vec<Project>> {
+    let mut projects: Vec<Project> = Vec::new();
+
+    let walker = WalkDir::new(projects_root_path).into_iter();
+    for entry in walker.filter_entry(|e| !is_hidden(e)) {
+        println!("{}", entry?.path().display());
+        // TODO: Filter for LIVE_SET_FILE_EXTENSION files, handle parent project dir
+        // TODO: Build Project struct, push to projects
+    }
+
+    Ok(projects)
+}
+
 pub fn index_templates(path: &Path) -> io::Result<Vec<Template>> {
     let mut templates: Vec<Template> = Vec::new();
 
@@ -61,7 +82,7 @@ pub fn index_templates(path: &Path) -> io::Result<Vec<Template>> {
             let template_version = 0.1;
             let template = Template::new(template_name, template_path, template_version);
             println!("{:?}", template);
-            templates.push(template)
+            templates.push(template);
         }
     }
 

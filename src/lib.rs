@@ -29,5 +29,6 @@ pub struct Cli {
 pub enum Commands {
     /// Calls test_rodio
     Test { file_path: Option<PathBuf> },
-    Templates
+    Templates,
+    Projects
 }

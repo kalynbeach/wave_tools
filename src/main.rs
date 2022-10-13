@@ -1,4 +1,4 @@
-use std::path::{Path};
+use std::path::Path;
 use clap::Parser;
 use wave_tools::{audio, ableton, Cli, Commands};
 
@@ -34,6 +34,11 @@ fn main() {
             // TODO: Create Path using &str from config
             let templates_dir_path = Path::new("/Users/kalynbeach/Music/Ableton/User Library/Templates");
             ableton::index_templates(templates_dir_path).unwrap();
+        }
+        Some(Commands::Projects) => {
+            println!("\n[* Projects *]\n");
+            let projects_root_path = Path::new("/Users/kalynbeach/Music/Ableton/Projects");
+            ableton::index_projects(projects_root_path).unwrap();
         }
         None => {}
     }
