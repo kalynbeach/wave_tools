@@ -18,6 +18,14 @@ const LIVE_CLIP_FILE_EXTENSION: &str = ".alc";
 pub struct Project {
     title: String,
     artist: String,
+    collection: String,
+    path: PathBuf
+}
+
+impl Project {
+    fn new(title: String, artist: String, collection: String, path: PathBuf) -> Self {
+        Project { title, artist, collection, path }
+    }
 }
 
 #[derive(Debug)]
@@ -50,22 +58,44 @@ impl Template {
     }
 }
 
-fn is_hidden(entry: &DirEntry) -> bool {
+fn is_ignored(entry: &DirEntry) -> bool {
     entry.file_name()
         .to_str()
-        .map(|s| s.starts_with("."))
+        .map(|s| { s.starts_with(".") || s == "Ableton Project Info" })
         .unwrap_or(false)
 }
 
 pub fn index_projects(projects_root_path: &Path) -> io::Result<Vec<Project>> {
     let mut projects: Vec<Project> = Vec::new();
-
+    let mut current_collection = String::new();
     let walker = WalkDir::new(projects_root_path).into_iter();
-    for entry in walker.filter_entry(|e| !is_hidden(e)) {
-        println!("{}", entry?.path().display());
-        // TODO: Filter for LIVE_SET_FILE_EXTENSION files, handle parent project dir
-        // TODO: Build Project struct, push to projects
+
+    for entry in walker.filter_entry(|e| !is_ignored(e)) {
+        let entry = entry?;
+        let entry_file_name = entry.file_name().to_str().unwrap();
+        // Handle Project 'Collection' directories
+        if entry.depth() == 1 {
+            current_collection = String::from(entry_file_name);
+        }
+        // Handle Project directories
+        if entry_file_name.contains("Project") {
+            let project_name = entry_file_name.replace(" Project", "");
+            // TODO: Replace with artist name str from config or metadata
+            let project_artist = String::from("KB");
+            let project_collection = String::from(&current_collection);
+            let project_path = PathBuf::from(entry.path());
+            let project = Project::new(
+                    project_name,
+                    project_artist,
+                    project_collection,
+                    project_path
+            );
+            println!("{:?}", project);
+            projects.push(project);
+        }
     }
+
+    println!("Projects: {}", projects.len());
 
     Ok(projects)
 }
