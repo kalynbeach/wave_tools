@@ -1530,6 +1530,7 @@ dependencies = [
  "chrono",
  "clap",
  "rodio",
+ "walkdir",
  "web-audio-api",
 ]
 
