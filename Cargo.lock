@@ -1529,6 +1529,7 @@ version = "0.1.0"
 dependencies = [
  "chrono",
  "clap",
+ "cpal 0.14.0",
  "rodio",
  "walkdir",
  "web-audio-api",
