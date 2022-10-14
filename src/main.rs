@@ -26,7 +26,7 @@ fn main() {
                 let context = audio::create_audio_context();
                 audio::test_web_audio(&context, path);
             } else {
-                audio::test_rodio();
+                audio::test_cpal();
             }
         }
         Some(Commands::Templates) => {
