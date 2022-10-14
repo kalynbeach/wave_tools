@@ -10,5 +10,6 @@ clap = { version = "4.0.15", features = ["derive"] }
 chrono = "0.4.22"
 walkdir = "2.3.2"
 cpal = "0.14.0"
+hound = "3.5.0"
 rodio = "0.16.0"
 web-audio-api = "0.22.0"

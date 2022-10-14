@@ -1530,6 +1530,7 @@ dependencies = [
  "chrono",
  "clap",
  "cpal 0.14.0",
+ "hound",
  "rodio",
  "walkdir",
  "web-audio-api",
