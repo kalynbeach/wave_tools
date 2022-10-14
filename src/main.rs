@@ -1,26 +1,16 @@
 use std::path::Path;
 use clap::Parser;
-use wave_tools::{audio, ableton, Cli, Commands};
+use wave_tools::{audio, music, ableton, Cli, Commands};
 
 fn main() {
     println!("\n w a v e _ t o o l s \n");
 
     let cli = Cli::parse();
 
-    if let Some(config_path) = cli.config.as_deref() {
-        println!("Value for config: {}", config_path.display());
-    }
-
-    match cli.debug {
-        0 => println!("Debug mode is off"),
-        1 => println!("Debug mode is kind of on"),
-        2 => println!("Debug mode is on"),
-        _ => println!("Bruh"),
-    }
-
     match &cli.command {
-        Some(Commands::Test { file_path }) => {
-            println!("\n[* Test *]\n");
+        // Audio commands
+        Commands::Test { file_path } => {
+            println!("\n[* Audio - Test *]\n");
             if let Some(path) = file_path.as_deref() {
                 println!("Test file file_path is: {}", path.display());
                 let context = audio::create_audio_context();
@@ -29,17 +19,37 @@ fn main() {
                 audio::test_cpal();
             }
         }
-        Some(Commands::Templates) => {
-            println!("\n[* Templates *]\n");
+
+        // Music commands
+        Commands::Bpm { file_path } => {
+            println!("\n[* Music - BPM *]\n");
+            if let Some(path) = file_path.as_deref() {
+                music::get_bpm(path);
+            }
+        }
+        Commands::Key { file_path } => {
+            println!("\n[* Music - Key *]\n");
+            if let Some(path) = file_path.as_deref() {
+                music::get_key(path);
+            }
+        }
+
+        // Ableton commands
+        Commands::Templates => {
+            println!("\n[* Ableton - Templates *]\n");
             // TODO: Create Path using &str from config
-            let templates_dir_path = Path::new("/Users/kalynbeach/Music/Ableton/User Library/Templates");
+            let templates_dir_path = Path::new(
+                "/Users/kalynbeach/Music/Ableton/User Library/Templates"
+            );
             ableton::index_templates(templates_dir_path).unwrap();
         }
-        Some(Commands::Projects) => {
-            println!("\n[* Projects *]\n");
-            let projects_root_path = Path::new("/Users/kalynbeach/Music/Ableton/Projects");
+        Commands::Projects => {
+            println!("\n[* Ableton - Projects *]\n");
+            // TODO: Create Path using &str from config
+            let projects_root_path = Path::new(
+                "/Users/kalynbeach/Music/Ableton/Projects"
+            );
             ableton::index_projects(projects_root_path).unwrap();
         }
-        None => {}
     }
 }
