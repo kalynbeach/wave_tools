@@ -11,6 +11,6 @@ chrono = "0.4.22"
 walkdir = "2.3.2"
 cpal = "0.14.0"
 hound = "3.5.0"
-aubio = { version = "0.2.0", features = ["bindgen"] }
+aubio = { version = "0.2.1", features = ["bindgen"] }
 rodio = "0.16.0"
 web-audio-api = "0.22.0"
