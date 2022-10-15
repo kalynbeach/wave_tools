@@ -11,12 +11,15 @@ fn main() {
         // Audio commands
         Commands::Test { file_path } => {
             println!("\n[* Audio - Test *]\n");
-            if let Some(path) = file_path.as_deref() {
+            if let Some(path) = file_path.as_ref() {
                 println!("Test file file_path is: {}", path.display());
-                let context = audio::create_audio_context();
-                audio::test_web_audio(&context, path);
+                // let context = audio::create_audio_context();
+                // audio::test_web_audio(&context, path);
+                // audio::test_aubio(path);
+                audio::test_aubio();
             } else {
-                audio::test_cpal();
+                // audio::test_cpal();
+                audio::test_aubio();
             }
         }
 

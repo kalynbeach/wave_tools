@@ -69,10 +69,10 @@ dependencies = [
 ]
 
 [[package]]
-name = "aubio-rs"
-version = "0.2.0"
+name = "aubio"
+version = "0.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9189fd9d8af82083a442e8b73ce12e602a6719f7360cf53f0bb9cb9e8c8d5a87"
+checksum = "577cfca08ecb60eb4ad21f19507bc614229130112ac606cd493c0e5bb5318f54"
 dependencies = [
  "aubio-sys",
 ]
@@ -1663,7 +1663,7 @@ checksum = "1c38c045535d93ec4f0b4defec448e4291638ee608530863b1e2ba115d4fff7f"
 name = "wave_tools"
 version = "0.1.0"
 dependencies = [
- "aubio-rs",
+ "aubio",
  "chrono",
  "clap 4.0.15",
  "cpal 0.14.0",

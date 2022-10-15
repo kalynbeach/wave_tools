@@ -1,6 +1,6 @@
 use std::fs::File;
 use std::path::Path;
-use std::io::BufReader;
+use std::io::{stdin, BufReader};
 use std::time::Duration;
 use cpal::Host;
 use cpal::traits::{DeviceTrait, HostTrait, StreamTrait};
@@ -8,6 +8,70 @@ use web_audio_api::AudioBuffer;
 use web_audio_api::context::{AudioContext, BaseAudioContext};
 use web_audio_api::node::{AudioNode, AudioScheduledSourceNode};
 use rodio::{Decoder, OutputStream, Sink};
+use aubio::{Smpl, Tempo, OnsetMode};
+use hound::WavReader;
+
+// aubio + hound experiments
+
+const BUF_SIZE: usize = 512;
+const HOP_SIZE: usize = 256;
+const I16_TO_SMPL: Smpl = 1.0 / (1 << 16) as Smpl;
+
+pub fn test_aubio() {
+    println!("Initializing...");
+    // TODO: Use file input from a given path
+    // let mut reader = WavReader::open(file_path).unwrap();
+
+    // TODO[?]: Convert input WAV file to 16-bit mono for analysis with aubio
+
+    let input = stdin();
+    let mut reader = WavReader::new(input).unwrap();
+
+    let format = reader.spec();
+
+    let mut samples = reader.samples();
+    // let mut notes = Notes::new(BUF_SIZE, HOP_SIZE, format.sample_rate).unwrap();
+
+    let mut tempo = Tempo::new(OnsetMode::Complex, BUF_SIZE, HOP_SIZE, format.sample_rate).unwrap();
+
+    // let period = 1.0 / format.sample_rate as Smpl;
+    // let mut time = 0.0;
+    // let mut offset = 0;
+
+    println!("Computing...");
+
+    loop {
+        let block = samples
+            .by_ref()
+            .map(|sample| sample.map(|sample: i16| sample as Smpl * I16_TO_SMPL))
+            .take(HOP_SIZE)
+            .collect::<Result<Vec<Smpl>, _>>()
+            .unwrap();
+        
+        if block.len() == HOP_SIZE {
+            let _tempo_result = tempo.do_result(block.as_slice().as_ref());
+
+            // for note in notes.do_result(block.as_slice().as_ref()).unwrap() {
+            //     if note.velocity > 0.0 {
+            //         println!("{}\t{}\t", note.pitch, time);
+            //     } else {
+            //         println!("{}", time);
+            //     }
+            // }
+        }
+
+        // offset += block.len();
+        // time = offset as Smpl * period;
+
+        if block.len() < HOP_SIZE {
+            println!("BPM: {:?}", tempo.get_bpm());
+            break;
+        }
+    }
+}
+
+
+// cpal experiments
 
 pub fn list_devices(host: &Host) {
     let devices = host.devices().unwrap();
@@ -45,6 +109,8 @@ pub fn test_cpal() {
     list_devices(&host);
 }
 
+// rodio experiments
+
 pub fn test_rodio() {
     let (_stream, stream_handle) = OutputStream::try_default().unwrap();
     let sink = Sink::try_new(&stream_handle).unwrap();
@@ -55,6 +121,8 @@ pub fn test_rodio() {
     sink.append(source);
     sink.sleep_until_end();
 }
+
+// web_audio_api experiments
 
 pub fn create_audio_context() -> AudioContext {
     println!("Creating audio context...");
