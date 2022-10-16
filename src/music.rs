@@ -1,19 +1,76 @@
 #![allow(dead_code)]
+use std::io;
 use std::io::{stdin, Stdin};
 use std::path::{Path, PathBuf};
+use walkdir::{DirEntry, WalkDir};
 use aubio::{Smpl, Tempo, OnsetMode, Error};
 use hound::{WavReader, WavSamples};
+
+const WAV_FILE_EXT: &str = ".wav";
+const MP3_FILE_EXT: &str = ".mp3";
 
 #[derive(Debug)]
 pub struct Record {
     title: String,
     artist: String,
+    path: PathBuf
+}
+
+impl Record {
+    fn new(
+        title: String,
+        artist: String,
+        path: PathBuf
+    ) -> Self {
+        Record { title, artist, path }
+    }
+}
+
+#[derive(Debug)]
+enum SampleFormats {
+    WAV,
+    MP3
 }
 
 #[derive(Debug)]
 pub struct Sample {
     name: String,
+    format: SampleFormats,
     path: PathBuf
+}
+
+impl Sample {
+    fn new(
+        name: String,
+        format: SampleFormats,
+        path: PathBuf
+    ) -> Self {
+        Sample { name, format, path }
+    }
+}
+
+fn is_ignored(entry: &DirEntry) -> bool {
+    entry.file_name()
+        .to_str()
+        .map(|s| s.starts_with("."))
+        .unwrap_or(false)
+}
+
+#[allow(unused)]
+pub fn index_entities<T>(root_dir: &Path) -> io::Result<Vec<T>> {
+    let mut entities: Vec<T> = Vec::new();
+    let walker = WalkDir::new(root_dir).into_iter();
+
+    for entry in walker.filter_entry(|e| !is_ignored(e)) {
+        let entry = entry?;
+        let entry_file_name = entry.file_name().to_str().unwrap();
+        // TODO: Filter for files with extension specified under type T
+        // TODO: Build T struct from matched file data
+    }
+
+    println!("Entities: {}", entities.len());
+
+    Ok(entities)
 }
 
 const BUF_SIZE: usize = 512;
