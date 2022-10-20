@@ -1,6 +1,6 @@
 #![allow(dead_code)]
-use std::io;
-use std::io::{stdin, Stdin};
+use std::fs::File;
+use std::io::{self, BufReader};
 use std::path::{Path, PathBuf};
 use walkdir::{DirEntry, WalkDir};
 use aubio::{Smpl, Tempo, OnsetMode, Error};
@@ -69,7 +69,6 @@ pub fn index_entities<T>(root_dir: &Path) -> io::Result<Vec<T>> {
     }
 
     println!("Entities: {}", entities.len());
-
     Ok(entities)
 }
 
@@ -77,41 +76,37 @@ const BUF_SIZE: usize = 512;
 const HOP_SIZE: usize = 256;
 const I16_TO_SMPL: Smpl = 1.0 / (1 << 16) as Smpl;
 
-pub fn get_bpm() -> Result<f32, Error> {
-    // TODO: Use WAV file input from a given path
-    // let mut reader = WavReader::open(file_path).unwrap();
-
+pub fn get_bpm(file_name: &Path) -> Result<f32, Error> {
     // TODO[?]: Convert input WAV file to 16-bit mono for analysis with aubio
 
-    println!("[get_bpm] Initializing...");
-    let input = stdin();
-    let mut reader = WavReader::new(input).unwrap();
-    let format = reader.spec();
-    let mut samples: WavSamples<Stdin, i16> = reader.samples();
-    let mut tempo = Tempo::new(
+    println!("[get_bpm] Initializing with file {:?}...", file_name.as_os_str());
+    let mut file_reader = WavReader::open(file_name).unwrap();
+    let file_format = file_reader.spec();
+    let mut file_samples: WavSamples<BufReader<File>, i16> = file_reader.samples();
+    let mut file_tempo = Tempo::new(
         OnsetMode::Complex,
         BUF_SIZE,
         HOP_SIZE,
-        format.sample_rate
+        file_format.sample_rate
     ).unwrap();
 
     println!("[get_bpm] Computing...");
     loop {
-        let block = samples
+        let block = file_samples
             .by_ref()
             .map(|sample| sample.map(|sample: i16| sample as Smpl * I16_TO_SMPL))
             .take(HOP_SIZE)
             .collect::<Result<Vec<Smpl>, _>>()
             .unwrap();
         if block.len() == HOP_SIZE {
-            tempo.do_result(block.as_slice().as_ref())?;
+            file_tempo.do_result(block.as_slice().as_ref())?;
         }
         if block.len() < HOP_SIZE {
             break;
         }
     }
 
-    let bpm = tempo.get_bpm();
+    let bpm = file_tempo.get_bpm();
     println!("[get_bpm] BPM: {:}", bpm);
     Ok(bpm)
 }

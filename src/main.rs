@@ -26,11 +26,11 @@ fn main() {
         // Music commands
         Commands::Bpm { file_path } => {
             println!("\n[* Music - BPM *]\n");
-            if let Some(_path) = file_path.as_deref() {
-                music::get_bpm().unwrap();
+            if let Some(file_name) = file_path.as_deref() {
+                music::get_bpm(file_name).unwrap();
                 // music::get_bpm(path);
             } else {
-                music::get_bpm().unwrap();
+                println!("File path required~");
             }
         }
         Commands::Key { file_path } => {
