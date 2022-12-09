@@ -4,6 +4,19 @@
 
 ## Usage
 
+---
+
 (Example) Get the BPM of a 16-bit mono WAV file:
 
-`cat samples/test_beat_m.wav | cargo run -- test`
+`cargo run -- bpm <file path>`
+
+Example:
+`cargo run -- bpm samples/test_beat_m.wav`
+
+List Ableton Live Projects:
+
+`cargo run -- projects`
+
+List Ableton Live Templates:
+
+`cargo run -- templates`
