@@ -16,10 +16,11 @@ fn main() {
                 // let context = audio::create_audio_context();
                 // audio::test_web_audio(&context, path);
                 // audio::test_aubio(path);
-                audio::test_aubio();
+                // audio::test_aubio();
+                audio::test_symphonia(path);
             } else {
                 // audio::test_cpal();
-                audio::test_aubio();
+                // audio::test_aubio();
             }
         }
 

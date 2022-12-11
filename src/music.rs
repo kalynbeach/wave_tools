@@ -78,6 +78,7 @@ const I16_TO_SMPL: Smpl = 1.0 / (1 << 16) as Smpl;
 
 pub fn get_bpm(file_name: &Path) -> Result<f32, Error> {
     // TODO[?]: Convert input WAV file to 16-bit mono for analysis with aubio
+    // > ffmpeg -i input.wav -acodec pcm_s16le -ac 1 output.wav
 
     println!("[get_bpm] Initializing with file {:?}...", file_name.as_os_str());
     let mut file_reader = WavReader::open(file_name).unwrap();

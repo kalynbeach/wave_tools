@@ -14,3 +14,4 @@ hound = "3.5.0"
 aubio = { version = "0.2.1", features = ["bindgen"] }
 rodio = "0.16.0"
 web-audio-api = "0.22.0"
+symphonia = "0.5.1"
